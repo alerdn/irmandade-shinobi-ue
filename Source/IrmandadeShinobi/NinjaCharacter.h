@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "InputActionValue.h"
 #include "NinjaCharacter.generated.h"
+
+class UInputAction;
 
 UCLASS()
 class IRMANDADESHINOBI_API ANinjaCharacter : public ACharacter
@@ -25,5 +28,14 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	class UInputMappingContext* InputMapping;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* MoveAction;
+
+	void Move(const FInputActionValue& Value);
 
 };

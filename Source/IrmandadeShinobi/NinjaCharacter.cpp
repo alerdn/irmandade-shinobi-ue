@@ -3,6 +3,7 @@
 
 #include "NinjaCharacter.h"
 #include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 
 // Sets default values
 ANinjaCharacter::ANinjaCharacter()
@@ -28,7 +29,13 @@ void ANinjaCharacter::Tick(float DeltaTime)
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
 	{
-		UEnhancedInputLocalPlayerSubsystem * Subsystem = ULocalPlayer::GetSubsystem<EnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+		// Pega InputLocalPlayerController
+		UEnhancedInputLocalPlayerSubsystem * Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+		if (Subsystem)
+		{
+			// Adiciona o InputMapping no sistema, com prioridade 0
+			Subsystem->AddMappingContext(InputMapping, 0);
+		}
 	}
 }
 
@@ -42,7 +49,13 @@ void ANinjaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	if (EnhancedInputComponent)
 	{
 		// BindActions...
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ANinjaCharacter::Move);
 	}
 
+}
+
+void ANinjaCharacter::Move(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Movement Value: %s"), *Value.Get<FVector>().ToCompactString());
 }
 
